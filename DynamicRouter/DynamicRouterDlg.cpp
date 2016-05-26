@@ -102,6 +102,12 @@ BEGIN_MESSAGE_MAP(CDynamicRouterDlg, CDialog)
 	ON_BN_CLICKED(IDC_BUTTON1, &CDynamicRouterDlg::OnPacketRecv)
 	ON_BN_CLICKED(IDC_BUTTON2, &CDynamicRouterDlg::OnAddRoutingEntry)
 	ON_BN_CLICKED(IDC_BUTTON5, &CDynamicRouterDlg::OnCleanCacheTable)
+	ON_NOTIFY(LVN_ITEMCHANGED, IDC_LIST3, &CDynamicRouterDlg::OnLvnItemchangedList3)
+	ON_BN_CLICKED(IDC_BUTTON6, &CDynamicRouterDlg::OnBnClickedButton6)
+	ON_LBN_SELCHANGE(IDC_LIST4, &CDynamicRouterDlg::OnLbnSelchangeList4)
+	ON_BN_CLICKED(IDC_BUTTON7, &CDynamicRouterDlg::OnBnClickedButton7)
+	ON_BN_CLICKED(IDC_BUTTON8, &CDynamicRouterDlg::OnBnClickedButton8)
+	ON_LBN_SELCHANGE(IDC_LIST4, &CDynamicRouterDlg::OnLbnSelchangeList4)
 END_MESSAGE_MAP()
 
 
@@ -577,4 +583,88 @@ void CDynamicRouterDlg::OnCleanCacheTable()
 	for(int i = 0; i<*cache_top; i++)
 		pcache_entry[i].cache_ttl = 0;
 	*cache_top = 0;
+}
+
+void CDynamicRouterDlg::OnLvnItemchangedList3(NMHDR *pNMHDR, LRESULT *pResult)
+{
+	LPNMLISTVIEW pNMLV = reinterpret_cast<LPNMLISTVIEW>(pNMHDR);
+	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
+	*pResult = 0;
+}
+
+// 프록시 테이블 창의 ADD 버튼 누를시
+void CDynamicRouterDlg::OnBnClickedButton6()
+{
+	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
+	CProxyAddDlg dlg;
+
+	// dlg에서 가져온 content를 통해 주소목록 추가
+	if(dlg.DoModal() == IDOK) 
+	{
+		LPPROXY_LIST proxy_element = (LPPROXY_LIST)malloc(sizeof(PROXY_LIST));
+		
+		Proxy_BufferAddr temp_BufferAddr = dlg.GetBufferAddr();
+		
+		proxy_element->proxy_entry.proxy_device = new CString(temp_BufferAddr.device);
+		memcpy(proxy_element->proxy_entry.proxy_enetaddr, temp_BufferAddr.buffer_EtherAddr, 6);
+		memcpy(proxy_element->proxy_entry.proxy_ipaddr, temp_BufferAddr.buffer_IPAddr, 4);
+		proxy_element->next = NULL;
+		
+		m_ARPLayer->AddProxy(proxy_element);
+		
+		Invalidate();
+	}
+}
+
+//비어있다.
+void CDynamicRouterDlg::OnLbnSelchangeListProxyTable()
+{
+	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
+}
+
+// 프록시 테이블 창의 DELETE 버튼 누를시
+void CDynamicRouterDlg::OnBnClickedButton7()
+{
+	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
+	if(m_ProxyList.GetCurSel() == LB_ERR)
+		return;
+
+	CString temp_IPAddr;
+	unsigned char IPAddr[10];
+	m_ProxyList.GetText(m_ProxyList.GetCurSel(), temp_IPAddr);
+	
+	int offset = temp_IPAddr.Find("IP:");
+	temp_IPAddr = temp_IPAddr.Right(temp_IPAddr.GetLength() - offset -4);
+	offset = temp_IPAddr.Find("[MAC:");
+	temp_IPAddr = temp_IPAddr.Left(offset);
+	offset = temp_IPAddr.Find("]");
+	temp_IPAddr = temp_IPAddr.Left(offset);
+	
+	for(int i = 0; i < 10; i++) 
+	{
+		CString temp;
+		unsigned char char_temp[10];
+		
+		AfxExtractSubString(temp, temp_IPAddr, i, '.');
+		sscanf(temp,"%d", &char_temp[i]);
+		IPAddr[i] = char_temp[i];
+	}
+	
+	m_ARPLayer->DeleteProxy(IPAddr);
+	
+	Invalidate();
+}
+
+// 프록시 테이블 창의 DELETE ALL 버튼 누를시
+void CDynamicRouterDlg::OnBnClickedButton8()
+{
+	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
+	m_ARPLayer->AllDeleteProxy();// 모든 element 제거
+	Invalidate();
+}
+
+
+void CDynamicRouterDlg::OnLbnSelchangeList4()
+{
+	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
 }

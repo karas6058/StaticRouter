@@ -51,6 +51,9 @@
     <ClCompile Include="UDPLayer.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
+    <ClCompile Include="ProxyAddDlg.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ARPLayer.h">
@@ -95,6 +98,9 @@
     <ClInclude Include="UDPLayer.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
+    <ClInclude Include="ProxyAddDlg.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="res\DynamicRouter.ico">
@@ -104,6 +110,7 @@
       <Filter>리소스 파일</Filter>
     </None>
     <None Include="ReadMe.txt" />
+    <None Include="ClassDiagram1.cd" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="DynamicRouter.rc">

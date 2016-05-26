@@ -69,4 +69,10 @@ public:
 	CListCtrl m_CacheTable;
 	afx_msg void OnAddRoutingEntry();
 	afx_msg void OnCleanCacheTable();
+	afx_msg void OnLvnItemchangedList3(NMHDR *pNMHDR, LRESULT *pResult);
+	afx_msg void OnBnClickedButton6();
+	afx_msg void OnLbnSelchangeListProxyTable();
+	afx_msg void OnBnClickedButton7();
+	afx_msg void OnBnClickedButton8();
+	afx_msg void OnLbnSelchangeList4();
 };

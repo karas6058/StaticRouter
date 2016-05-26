@@ -46,6 +46,8 @@
 #define MAX_UDP_DATA			1472
 #define MAX_ENTRY				16
 #define MAX_ARP_SIZE			28
+//{{AFX_INSERT_LOCATION}}
+#define MAX_DEVICE			16
 
 typedef struct ip_addr {
         union {
